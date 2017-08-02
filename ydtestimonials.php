@@ -23,6 +23,7 @@ class ydtestimonials extends Module
     {
         if (!parent::install()
             || !$this->addAdminTab()
+            || !$this->installDb()
         ) {
             return false;
         }
@@ -32,6 +33,7 @@ class ydtestimonials extends Module
     {
         if (!parent::uninstall()
             || !$this->removeAdminTab()
+            || !$this->uninstallDb()
         ) {
             return false;
         }
@@ -61,5 +63,22 @@ class ydtestimonials extends Module
             $return &= $tab->delete();
         }
         return $return;
+    }
+
+    public  function installDb()
+	{
+		$sql = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'testimonials` (
+			`id_testimonials` int(11) NOT NULL auto_increment,
+			`testimonials_name` varchar(50) NOT NULL,
+			`testimonials_description` varchar(200) NOT NULL,
+			`date_testimonials` datetime NOT NULL,
+			PRIMARY KEY (`id_testimonials`))';
+		return Db::getInstance()->execute($sql);
+	}
+
+    public function uninstallDb()
+    {
+        $sql = 'DROP TABLE '._DB_PREFIX_.'testimonials';
+        return Db::getInstance()->execute($sql);
     }
 }
